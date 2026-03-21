@@ -1,512 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Find Following Not in Followers</title>
+  <title>Following Not Followers | Private Instagram Follower Checker</title>
+  <meta
+    name="description"
+    content="Compare Instagram followers and following export files privately in your browser to find accounts that do not follow you back."
+  />
+  <meta
+    name="keywords"
+    content="instagram followers checker, following not followers, instagram export json, who doesn't follow me back"
+  />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0a0a0f" />
+  <link rel="canonical" href="https://following-not-followers.vercel.app/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Following Not Followers | Private Instagram Follower Checker" />
+  <meta
+    property="og:description"
+    content="Upload Instagram export JSON files locally and instantly see which accounts you follow that do not follow you back."
+  />
+  <meta property="og:url" content="https://following-not-followers.vercel.app/" />
+  <meta property="og:image" content="https://following-not-followers.vercel.app/favicon.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Following Not Followers | Private Instagram Follower Checker" />
+  <meta
+    name="twitter:description"
+    content="A fast, private browser tool for comparing Instagram followers and following JSON exports."
+  />
+  <meta name="twitter:image" content="https://following-not-followers.vercel.app/favicon.png" />
   <link rel="icon" type="image/png" href="favicon.png" />
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Following Not Followers",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Web",
+      "url": "https://following-not-followers.vercel.app/",
+      "description": "A browser-based tool that compares Instagram export files to find accounts you follow that do not follow you back.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Local JSON comparison",
+        "No account login required",
+        "Search and sort results",
+        "Private browser-only processing"
+      ]
+    }
+  </script>
+  <script src="app.js" defer></script>
 </head>
-
 <body>
-  <div class="header">
-    <h1>Find "Following" Not in "Followers"</h1>
-    <p>Upload your Instagram data export files to discover who doesn't follow you back</p>
-  </div>
+  <div class="page-shell">
+    <header class="hero">
+      <p class="eyebrow">Private, browser-based Instagram comparison</p>
+      <h1>Find the Instagram accounts you follow that do not follow you back</h1>
+      <p class="hero-copy">
+        Compare Instagram export JSON files locally in your browser. Nothing is uploaded, tracked, or stored on a
+        server.
+      </p>
+    </header>
 
-  <div class="upload-section">
-    <label>Followers JSON File</label>
-    <div class="drop-zone" id="followersDropZone">
-      📂 Drag & drop file here, or click to browse
-      <input type="file" id="followersFile" accept="application/json" />
-    </div>
-
-    <label>Following JSON File</label>
-    <div class="drop-zone" id="followingDropZone">
-      📂 Drag & drop file here, or click to browse
-      <input type="file" id="followingFile" accept="application/json" />
-    </div>
-
-    <button id="compareBtn">Compare</button>
-  </div>
-
-  <div class="error-banner" id="errorBanner"></div>
-
-  <div id="results">
-    <div class="count-banner" id="countBanner"></div>
-
-    <div class="toolbar">
-      <div class="search-wrapper">
-        <span class="search-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="7" />
-            <line x1="16.5" y1="16.5" x2="21" y2="21" />
-          </svg></span>
-        <input type="text" class="search-box" id="searchBox" placeholder="Search usernames…" />
-      </div>
-
-      <!-- Sort Dropdown -->
-      <div class="dropdown-wrapper" id="sortDropdown">
-        <button class="toolbar-btn" id="sortBtn">
-          <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="4" y1="7" x2="20" y2="7" />
-              <line x1="4" y1="12" x2="16" y2="12" />
-              <line x1="4" y1="17" x2="12" y2="17" />
-            </svg></span>
-          <span id="sortLabel">Sort</span>
-          <span class="chevron">▼</span>
-        </button>
-        <div class="dropdown-menu" id="sortMenu">
-          <button class="dropdown-item selected" data-sort="username-asc">
-            <span class="check">✓</span> Username A → Z
-          </button>
-          <button class="dropdown-item" data-sort="username-desc">
-            <span class="check"></span> Username Z → A
-          </button>
-          <div class="dropdown-divider"></div>
-          <button class="dropdown-item" data-sort="date-newest">
-            <span class="check"></span> Follow Date (Newest)
-          </button>
-          <button class="dropdown-item" data-sort="date-oldest">
-            <span class="check"></span> Follow Date (Oldest)
-          </button>
+    <main class="page-content">
+      <section class="panel tool-panel" aria-labelledby="compareHeading">
+        <div class="panel-heading">
+          <div>
+            <h2 id="compareHeading">Upload your Instagram export</h2>
+            <p>Use the JSON files from Instagram's "Download your information" export.</p>
+          </div>
+          <p class="panel-badge">Works fully offline after the page loads</p>
         </div>
-      </div>
-    </div>
 
-    <div class="search-info" id="searchInfo"></div>
+        <form id="compareForm" class="compare-form">
+          <div class="file-grid">
+            <div class="field-group">
+              <label for="followersFile">Followers JSON file</label>
+              <div class="drop-zone" id="followersDropZone" role="button" tabindex="0" aria-controls="followersFile">
+                <span class="drop-zone__text drop-zone__text--desktop">Drag and drop <code>followers_1.json</code>, or click to browse</span>
+                <span class="drop-zone__text drop-zone__text--mobile">Tap to choose <code>followers_1.json</code></span>
+                <span class="drop-zone__meta" id="followersStatus">No file selected</span>
+                <input type="file" id="followersFile" accept=".json,application/json" />
+              </div>
+            </div>
 
-    <ul id="resultList" class="card-grid"></ul>
-  </div>
-
-  <script>
-    // ──────────────────────────────────────
-    // Drag & drop setup
-    // ──────────────────────────────────────
-    function setupDropZone(dropZoneId, inputId) {
-      const dropZone = document.getElementById(dropZoneId);
-      const input = document.getElementById(inputId);
-
-      const label = document.createElement("span");
-      label.textContent = dropZone.firstChild.textContent.trim();
-      dropZone.firstChild.replaceWith(label);
-
-      function setLabel(text) {
-        label.textContent = text;
-      }
-
-      dropZone.addEventListener("click", (e) => {
-        if (e.target !== input) input.click();
-      });
-
-      input.addEventListener("change", () => {
-        if (input.files.length > 0) {
-          setLabel(`✅ ${input.files[0].name}`);
-          dropZone.classList.add("has-file");
-        }
-      });
-
-      dropZone.addEventListener("dragover", (e) => {
-        e.preventDefault();
-        dropZone.classList.add("drag-over");
-      });
-
-      dropZone.addEventListener("dragleave", () => {
-        dropZone.classList.remove("drag-over");
-      });
-
-      dropZone.addEventListener("drop", (e) => {
-        e.preventDefault();
-        dropZone.classList.remove("drag-over");
-        const file = e.dataTransfer.files[0];
-        if (file && file.type === "application/json") {
-          const dt = new DataTransfer();
-          dt.items.add(file);
-          input.files = dt.files;
-          setLabel(`✅ ${file.name}`);
-          dropZone.classList.add("has-file");
-        } else {
-          showError("Please drop a valid JSON file.");
-        }
-      });
-    }
-
-    setupDropZone("followersDropZone", "followersFile");
-    setupDropZone("followingDropZone", "followingFile");
-
-    // ──────────────────────────────────────
-    // Error display
-    // ──────────────────────────────────────
-    function showError(msg) {
-      const banner = document.getElementById("errorBanner");
-      banner.textContent = msg;
-      banner.style.display = "block";
-      setTimeout(() => (banner.style.display = "none"), 6000);
-    }
-
-    function hideError() {
-      document.getElementById("errorBanner").style.display = "none";
-    }
-
-    // ──────────────────────────────────────
-    // Auto-detect: find the array of items
-    // with string_list_data in any JSON shape
-    // ──────────────────────────────────────
-    function findItemsArray(data) {
-      if (Array.isArray(data)) {
-        if (data.length > 0 && data[0].string_list_data) {
-          return data;
-        }
-      }
-      if (data && typeof data === "object" && !Array.isArray(data)) {
-        for (const key of Object.keys(data)) {
-          const result = findItemsArray(data[key]);
-          if (result) return result;
-        }
-      }
-      return null;
-    }
-
-    // ──────────────────────────────────────
-    // Extract usernames + timestamps
-    // ──────────────────────────────────────
-    function extractUsernamesWithData(items) {
-      return items.flatMap((item) => {
-        if (!item.string_list_data || !Array.isArray(item.string_list_data)) {
-          return [];
-        }
-        return item.string_list_data.map((entry) => {
-          let username = entry.value || item.title;
-          if (entry.href) {
-            try {
-              const url = new URL(entry.href);
-              const pathParts = url.pathname.split("/").filter(Boolean);
-              username = pathParts[pathParts.length - 1];
-            } catch (_) { }
-          }
-          return {
-            username,
-            timestamp: entry.timestamp || null,
-          };
-        });
-      });
-    }
-
-    // ──────────────────────────────────────
-    // Read a file and parse JSON
-    // ──────────────────────────────────────
-    function readFile(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          try {
-            const data = JSON.parse(event.target.result);
-            resolve(data);
-          } catch (error) {
-            reject(`"${file.name}" is not valid JSON.`);
-          }
-        };
-        reader.onerror = () => reject(`Failed to read "${file.name}".`);
-        reader.readAsText(file);
-      });
-    }
-
-
-
-    // ──────────────────────────────────────
-    // Format timestamp to date string
-    // ──────────────────────────────────────
-    function formatDate(ts) {
-      if (!ts) return null;
-      const d = new Date(ts * 1000);
-      return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    }
-
-    // ──────────────────────────────────────
-    // Instagram colors for fallback avatars
-    // ──────────────────────────────────────
-    const IG_GRADIENTS = [
-      "linear-gradient(135deg, #833ab4, #fd1d1d)",
-      "linear-gradient(135deg, #fd1d1d, #fcb045)",
-      "linear-gradient(135deg, #fcb045, #833ab4)",
-      "linear-gradient(135deg, #405de6, #833ab4)",
-      "linear-gradient(135deg, #e1306c, #fd1d1d)",
-      "linear-gradient(135deg, #833ab4, #c13584)",
-      "linear-gradient(135deg, #405de6, #5851db)",
-      "linear-gradient(135deg, #f77737, #fcb045)",
-    ];
-
-    function getGradient(username) {
-      let hash = 0;
-      for (let i = 0; i < username.length; i++) {
-        hash = username.charCodeAt(i) + ((hash << 5) - hash);
-      }
-      return IG_GRADIENTS[Math.abs(hash) % IG_GRADIENTS.length];
-    }
-
-    // ──────────────────────────────────────
-    // Build a profile card HTML
-    // ──────────────────────────────────────
-    function createProfileCard(userEntry) {
-      const { username, timestamp } = userEntry;
-      const card = document.createElement("li");
-      card.className = "profile-card";
-
-      const initial = username.charAt(0).toUpperCase();
-      const gradient = getGradient(username);
-      const followDate = formatDate(timestamp);
-
-      card.innerHTML = `
-        <div class="card-top">
-          <div class="avatar-wrapper">
-            <div class="avatar-ring">
-              <div class="avatar" style="background:${gradient}">${initial}</div>
+            <div class="field-group">
+              <label for="followingFile">Following JSON file</label>
+              <div class="drop-zone" id="followingDropZone" role="button" tabindex="0" aria-controls="followingFile">
+                <span class="drop-zone__text drop-zone__text--desktop">Drag and drop <code>following.json</code>, or click to browse</span>
+                <span class="drop-zone__text drop-zone__text--mobile">Tap to choose <code>following.json</code></span>
+                <span class="drop-zone__meta" id="followingStatus">No file selected</span>
+                <input type="file" id="followingFile" accept=".json,application/json" />
+              </div>
             </div>
           </div>
-          <div class="user-info">
-            <span class="username">@${username}</span>
+
+          <div class="form-actions">
+            <button id="compareBtn" type="submit">Compare files</button>
+            <p class="help-text">Instagram usernames are parsed directly from the export data, not from manual input.</p>
+          </div>
+        </form>
+
+        <div class="error-banner" id="errorBanner" role="alert" aria-live="polite" hidden></div>
+      </section>
+
+      <section class="panel results-panel" id="results" aria-labelledby="resultsHeading" hidden>
+        <div class="results-header">
+          <div>
+            <h2 id="resultsHeading">Comparison results</h2>
+            <p>Search, sort, and open profiles directly on Instagram.</p>
+          </div>
+          <div class="count-banner" id="countBanner" aria-live="polite"></div>
+        </div>
+
+        <div class="toolbar">
+          <div class="search-wrapper">
+            <label class="visually-hidden" for="searchBox">Search usernames</label>
+            <span class="search-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="7" />
+                <line x1="16.5" y1="16.5" x2="21" y2="21" />
+              </svg>
+            </span>
+            <input
+              type="search"
+              class="search-box"
+              id="searchBox"
+              placeholder="Search usernames"
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </div>
+
+          <div class="dropdown-wrapper">
+            <button class="toolbar-btn" id="sortBtn" type="button" aria-haspopup="true" aria-expanded="false">
+              <span class="icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="4" y1="7" x2="20" y2="7" />
+                  <line x1="4" y1="12" x2="16" y2="12" />
+                  <line x1="4" y1="17" x2="12" y2="17" />
+                </svg>
+              </span>
+              <span id="sortLabel">Username A to Z</span>
+              <span class="chevron" aria-hidden="true">&#9662;</span>
+            </button>
+            <div class="dropdown-menu" id="sortMenu" aria-label="Sort results">
+              <button class="dropdown-item selected" data-sort="username-asc" type="button" aria-pressed="true">
+                <span class="check" aria-hidden="true">&#10003;</span>
+                <span>Username A to Z</span>
+              </button>
+              <button class="dropdown-item" data-sort="username-desc" type="button" aria-pressed="false">
+                <span class="check" aria-hidden="true"></span>
+                <span>Username Z to A</span>
+              </button>
+              <div class="dropdown-divider"></div>
+              <button class="dropdown-item" data-sort="date-newest" type="button" aria-pressed="false">
+                <span class="check" aria-hidden="true"></span>
+                <span>Follow date, newest first</span>
+              </button>
+              <button class="dropdown-item" data-sort="date-oldest" type="button" aria-pressed="false">
+                <span class="check" aria-hidden="true"></span>
+                <span>Follow date, oldest first</span>
+              </button>
+            </div>
           </div>
         </div>
-        ${followDate ? `<div class="follow-date">Following since <span>${followDate}</span></div>` : ""}
-        <a class="visit-btn" href="https://www.instagram.com/${username}" target="_blank" rel="noopener noreferrer">
-          View Profile <span class="arrow">→</span>
-        </a>
-      `;
 
-      return card;
-    }
+        <p class="search-info" id="searchInfo" aria-live="polite"></p>
+        <ul id="resultList" class="card-grid"></ul>
+      </section>
 
-    // ──────────────────────────────────────
-    // Search / filter / sort state
-    // ──────────────────────────────────────
-    let allResults = []; // array of { username, timestamp }
-    let currentSort = "username-asc";
+      <section class="info-grid" aria-label="Helpful information">
+        <article class="panel info-card">
+          <h2>How to use it</h2>
+          <ol class="info-list">
+            <li>Download your Instagram information in JSON format.</li>
+            <li>Locate the followers and following files in the unzipped export.</li>
+            <li>Upload both files here and compare them instantly.</li>
+          </ol>
+        </article>
 
-    // ──────────────────────────────────────
-    // Dropdown toggle logic
-    // ──────────────────────────────────────
-    function setupDropdown(btnId, menuId, onSelect, labelId) {
-      const btn = document.getElementById(btnId);
-      const menu = document.getElementById(menuId);
+        <article class="panel info-card">
+          <h2>Why it is private</h2>
+          <ul class="info-list">
+            <li>Your files stay in the browser and are never sent to a backend.</li>
+            <li>You do not need to log in with your Instagram account.</li>
+            <li>You can save the page and run it locally with a basic static server.</li>
+          </ul>
+        </article>
 
-      btn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        // Close other dropdowns
-        document.querySelectorAll(".dropdown-menu.show").forEach((m) => {
-          if (m !== menu) {
-            m.classList.remove("show");
-            m.previousElementSibling?.classList.remove("open");
-          }
-        });
-        menu.classList.toggle("show");
-        btn.classList.toggle("open");
-      });
+        <article class="panel info-card">
+          <h2>What the tool checks</h2>
+          <p>
+            The app compares usernames in your exported following list against usernames in your followers list, then
+            shows the accounts that appear only in following.
+          </p>
+        </article>
+      </section>
+    </main>
 
-      menu.querySelectorAll(".dropdown-item").forEach((item) => {
-        item.addEventListener("click", () => {
-          // Update selection UI
-          menu.querySelectorAll(".dropdown-item").forEach((i) => {
-            i.classList.remove("selected");
-            i.querySelector(".check").textContent = "";
-          });
-          item.classList.add("selected");
-          item.querySelector(".check").textContent = "✓";
-
-          // Update button label
-          const label = item.textContent.replace("✓", "").trim();
-          document.getElementById(labelId).textContent = label;
-          btn.classList.add("active");
-
-          // Close menu
-          menu.classList.remove("show");
-          btn.classList.remove("open");
-
-          // Trigger callback
-          onSelect(item.dataset.filter || item.dataset.sort);
-        });
-      });
-    }
-
-    // Close dropdowns when clicking outside
-    document.addEventListener("click", () => {
-      document.querySelectorAll(".dropdown-menu.show").forEach((m) => {
-        m.classList.remove("show");
-        m.previousElementSibling?.classList.remove("open");
-      });
-    });
-
-    setupDropdown("sortBtn", "sortMenu", (value) => {
-      currentSort = value;
-      applyFilterSortSearch();
-    }, "sortLabel");
-
-    // ──────────────────────────────────────
-    // Sort logic
-    // ──────────────────────────────────────
-    function applySort(list) {
-      const sorted = [...list];
-      sorted.sort((a, b) => {
-        switch (currentSort) {
-          case "username-asc":
-            return a.username.localeCompare(b.username);
-          case "username-desc":
-            return b.username.localeCompare(a.username);
-          case "date-newest":
-            return (b.timestamp || 0) - (a.timestamp || 0);
-          case "date-oldest":
-            return (a.timestamp || 0) - (b.timestamp || 0);
-          default:
-            return 0;
-        }
-      });
-      return sorted;
-    }
-
-    // ──────────────────────────────────────
-    // Combined sort + search
-    // ──────────────────────────────────────
-    function applyFilterSortSearch() {
-      const query = document.getElementById("searchBox").value.toLowerCase();
-      let list = allResults;
-
-      // Search
-      if (query) {
-        list = list.filter((u) =>
-          u.username.toLowerCase().includes(query)
-        );
-      }
-
-      // Sort
-      list = applySort(list);
-
-      renderCards(list);
-    }
-
-    document.getElementById("searchBox").addEventListener("input", () => {
-      applyFilterSortSearch();
-    });
-
-    function renderCards(list) {
-      const resultList = document.getElementById("resultList");
-      const searchInfo = document.getElementById("searchInfo");
-      resultList.innerHTML = "";
-
-      if (list.length === 0) {
-        resultList.innerHTML = '<div class="no-results">No matches found.</div>';
-        searchInfo.textContent = "";
-        return;
-      }
-
-      if (list.length !== allResults.length) {
-        searchInfo.textContent = `Showing ${list.length} of ${allResults.length}`;
-      } else {
-        searchInfo.textContent = "";
-      }
-
-      list.forEach((userEntry) => {
-        const card = createProfileCard(userEntry);
-        resultList.appendChild(card);
-      });
-    }
-
-
-
-    // ──────────────────────────────────────
-    // Compare logic
-    // ──────────────────────────────────────
-    document.getElementById("compareBtn").addEventListener("click", async () => {
-      const followersFile = document.getElementById("followersFile").files[0];
-      const followingFile = document.getElementById("followingFile").files[0];
-
-      if (!followersFile || !followingFile) {
-        showError("Please upload both JSON files.");
-        return;
-      }
-
-      hideError();
-      const btn = document.getElementById("compareBtn");
-      const resultsDiv = document.getElementById("results");
-      btn.disabled = true;
-      resultsDiv.style.display = "none";
-
-      try {
-        const [followersData, followingData] = await Promise.all([
-          readFile(followersFile),
-          readFile(followingFile),
-        ]);
-
-        const followersItems = findItemsArray(followersData);
-        if (!followersItems) {
-          throw new Error(
-            `Could not find user data in "${followersFile.name}". Expected an array of items with "string_list_data".`
-          );
-        }
-
-        const followingItems = findItemsArray(followingData);
-        if (!followingItems) {
-          throw new Error(
-            `Could not find user data in "${followingFile.name}". Expected an array of items with "string_list_data".`
-          );
-        }
-
-        const followersSet = new Set(
-          extractUsernamesWithData(followersItems).map((e) => e.username)
-        );
-        const followingAll = extractUsernamesWithData(followingItems);
-
-        // Find "following" who are not in "followers"
-        const notFollowers = followingAll
-          .filter((entry) => !followersSet.has(entry.username))
-          .sort((a, b) => a.username.localeCompare(b.username));
-
-        // Deduplicate by username
-        const seen = new Set();
-        allResults = notFollowers.filter((entry) => {
-          if (seen.has(entry.username)) return false;
-          seen.add(entry.username);
-          return true;
-        });
-
-        // Show results
-        resultsDiv.style.display = "block";
-
-        const countBanner = document.getElementById("countBanner");
-        if (allResults.length === 0) {
-          countBanner.textContent = '🎉 All "following" are also "followers"!';
-          countBanner.style.background = "linear-gradient(135deg, #059669, #10b981)";
-        } else {
-          countBanner.textContent = `${allResults.length} account${allResults.length === 1 ? "" : "s"} don't follow you back`;
-          countBanner.style.background = "linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)";
-        }
-
-        document.getElementById("searchBox").value = "";
-
-        renderCards(allResults);
-      } catch (error) {
-        showError(error.message || error);
-      } finally {
-        btn.disabled = false;
-      }
-    });
-  </script>
-
-  <!-- Footer -->
-  <div class="footer">
-    <div>
-      <p style="margin: 0;">
-        Made by <span class="ig-handle">Ekam</span>
-      </p>
-      © <span id="footerYear"></span>
-      <script>document.getElementById("footerYear").textContent = new Date().getFullYear();</script>
-    </div>
-    <div class="right">
-      Follow
-      <a href="https://www.instagram.com/notsookayekam" target="_blank" class="ig-handle">@notsookayekam</a><br />
-      <a href="https://github.com/Ekam-Bitt/following-not-followers" target="_blank">⭐️ this repo on Github</a>
-    </div>
+    <footer class="footer">
+      <div>
+        <p>Made by <span class="ig-handle">Ekam</span></p>
+        <p>Copyright <span id="footerYear"></span></p>
+      </div>
+      <div class="footer-links">
+        <a href="https://www.instagram.com/notsookayekam" target="_blank" rel="noopener noreferrer">@notsookayekam</a>
+        <a href="https://github.com/Ekam-Bitt/following-not-followers" target="_blank" rel="noopener noreferrer">Star the repository on GitHub</a>
+      </div>
+    </footer>
   </div>
 </body>
-
 </html>
