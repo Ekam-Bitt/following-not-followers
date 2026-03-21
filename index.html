@@ -5,257 +5,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Find Following Not in Followers</title>
-  <style>
-    /* General styles */
-    body {
-      font-family: "Arial", sans-serif;
-      background-color: #f4f4f9;
-      margin: 0;
-      padding: 0;
-      color: #333;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    h1 {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 2.5rem;
-      color: #0059e7;
-      text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .upload-section {
-      background-color: #fff;
-      padding: 40px;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      margin: 20px auto;
-      width: 60%;
-      max-width: 600px;
-    }
-
-    .upload-section label {
-      font-size: 1.1rem;
-      font-weight: bold;
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    /* Drop zone styles */
-    .drop-zone {
-      border: 2px dashed #ccc;
-      border-radius: 8px;
-      padding: 20px;
-      text-align: center;
-      cursor: pointer;
-      margin-bottom: 20px;
-      transition: all 0.3s ease;
-      background-color: #fafafa;
-      color: #888;
-      font-size: 0.95rem;
-    }
-
-    .drop-zone:hover {
-      border-color: #0059e7;
-      background-color: #f0f5ff;
-    }
-
-    .drop-zone.drag-over {
-      border-color: #00ab22;
-      background-color: #f0fff4;
-      color: #00ab22;
-    }
-
-    .drop-zone.has-file {
-      border-color: #0059e7;
-      background-color: #f0f5ff;
-      color: #0059e7;
-      font-weight: bold;
-    }
-
-    .drop-zone input[type="file"] {
-      display: none;
-    }
-
-    .upload-section button {
-      width: 100%;
-      padding: 12px;
-      background-color: #0059e7;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .upload-section button:hover {
-      background-color: #00ab22;
-    }
-
-    .upload-section button:disabled {
-      background-color: #999;
-      cursor: not-allowed;
-    }
-
-
-
-    /* Result section styles */
-    #results {
-      display: none;
-      width: 60%;
-      margin: 20px auto;
-      padding-bottom: 80px;
-    }
-
-    /* Count banner */
-    .count-banner {
-      background-color: #0059e7;
-      color: white;
-      padding: 15px 20px;
-      border-radius: 8px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      text-align: center;
-      margin-bottom: 15px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Search box */
-    .search-box {
-      width: 100%;
-      padding: 12px 15px;
-      border: 2px solid #ddd;
-      border-radius: 8px;
-      font-size: 1rem;
-      margin-bottom: 15px;
-      box-sizing: border-box;
-      transition: border-color 0.3s ease;
-    }
-
-    .search-box:focus {
-      outline: none;
-      border-color: #0059e7;
-    }
-
-    .search-info {
-      text-align: center;
-      color: #888;
-      font-size: 0.9rem;
-      margin-bottom: 10px;
-    }
-
-    #resultList {
-      list-style-type: none;
-      padding: 0;
-    }
-
-    .result-list li {
-      background-color: #ffffff;
-      margin: 10px 0;
-      padding: 15px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      font-size: 1.1rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .result-list li a {
-      text-decoration: none;
-      color: #4a90e2;
-      transition: color 0.3s ease;
-    }
-
-    .result-list li a:hover {
-      color: #357ab7;
-    }
-
-    .result-list li::before {
-      content: attr(data-index);
-      font-weight: bold;
-      margin-right: 15px;
-      color: #999;
-    }
-
-    /* Error banner */
-    .error-banner {
-      background-color: #ff4444;
-      color: white;
-      padding: 15px 20px;
-      border-radius: 8px;
-      font-size: 1rem;
-      text-align: center;
-      margin: 15px auto;
-      width: 60%;
-      max-width: 600px;
-      display: none;
-    }
-
-    /* Footer Styles */
-    .footer {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background-color: black;
-      color: white;
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 1rem;
-      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .footer div.right {
-      text-align: right;
-      margin-right: 35px;
-    }
-
-    .footer a {
-      color: #fff;
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-
-    .footer a:hover {
-      color: #4a90e2;
-    }
-
-    /* Responsiveness */
-    @media (max-width: 768px) {
-      .upload-section {
-        width: 90%;
-      }
-
-      #results {
-        width: 90%;
-      }
-
-      .error-banner {
-        width: 90%;
-      }
-
-      .footer {
-        font-size: 0.9rem;
-      }
-    }
-  </style>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <h1>Find "Following" Not in "Followers"</h1>
+  <div class="header">
+    <h1>Find "Following" Not in "Followers"</h1>
+    <p>Upload your Instagram data export files to discover who doesn't follow you back</p>
+  </div>
+
   <div class="upload-section">
-    <label>Upload Followers JSON File:</label>
+    <label>Followers JSON File</label>
     <div class="drop-zone" id="followersDropZone">
       📂 Drag & drop file here, or click to browse
       <input type="file" id="followersFile" accept="application/json" />
     </div>
 
-    <label>Upload Following JSON File:</label>
+    <label>Following JSON File</label>
     <div class="drop-zone" id="followingDropZone">
       📂 Drag & drop file here, or click to browse
       <input type="file" id="followingFile" accept="application/json" />
@@ -266,13 +33,52 @@
 
   <div class="error-banner" id="errorBanner"></div>
 
-
-
   <div id="results">
     <div class="count-banner" id="countBanner"></div>
-    <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search usernames…" />
+
+    <div class="toolbar">
+      <div class="search-wrapper">
+        <span class="search-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7" />
+            <line x1="16.5" y1="16.5" x2="21" y2="21" />
+          </svg></span>
+        <input type="text" class="search-box" id="searchBox" placeholder="Search usernames…" />
+      </div>
+
+      <!-- Sort Dropdown -->
+      <div class="dropdown-wrapper" id="sortDropdown">
+        <button class="toolbar-btn" id="sortBtn">
+          <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="4" y1="7" x2="20" y2="7" />
+              <line x1="4" y1="12" x2="16" y2="12" />
+              <line x1="4" y1="17" x2="12" y2="17" />
+            </svg></span>
+          <span id="sortLabel">Sort</span>
+          <span class="chevron">▼</span>
+        </button>
+        <div class="dropdown-menu" id="sortMenu">
+          <button class="dropdown-item selected" data-sort="username-asc">
+            <span class="check">✓</span> Username A → Z
+          </button>
+          <button class="dropdown-item" data-sort="username-desc">
+            <span class="check"></span> Username Z → A
+          </button>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item" data-sort="date-newest">
+            <span class="check"></span> Follow Date (Newest)
+          </button>
+          <button class="dropdown-item" data-sort="date-oldest">
+            <span class="check"></span> Follow Date (Oldest)
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div class="search-info" id="searchInfo"></div>
-    <ul id="resultList" class="result-list"></ul>
+
+    <ul id="resultList" class="card-grid"></ul>
   </div>
 
   <script>
@@ -283,8 +89,6 @@
       const dropZone = document.getElementById(dropZoneId);
       const input = document.getElementById(inputId);
 
-      // Create a span for the label text so we don't destroy
-      // the hidden input when updating the display text
       const label = document.createElement("span");
       label.textContent = dropZone.firstChild.textContent.trim();
       dropZone.firstChild.replaceWith(label);
@@ -293,12 +97,10 @@
         label.textContent = text;
       }
 
-      // Click to browse (but not if clicking on the input itself)
       dropZone.addEventListener("click", (e) => {
         if (e.target !== input) input.click();
       });
 
-      // When file chosen via browse dialog
       input.addEventListener("change", () => {
         if (input.files.length > 0) {
           setLabel(`✅ ${input.files[0].name}`);
@@ -306,7 +108,6 @@
         }
       });
 
-      // Drag events
       dropZone.addEventListener("dragover", (e) => {
         e.preventDefault();
         dropZone.classList.add("drag-over");
@@ -321,7 +122,6 @@
         dropZone.classList.remove("drag-over");
         const file = e.dataTransfer.files[0];
         if (file && file.type === "application/json") {
-          // Transfer dropped file to the hidden input
           const dt = new DataTransfer();
           dt.items.add(file);
           input.files = dt.files;
@@ -355,13 +155,11 @@
     // with string_list_data in any JSON shape
     // ──────────────────────────────────────
     function findItemsArray(data) {
-      // If data is already an array of objects with string_list_data, return it
       if (Array.isArray(data)) {
         if (data.length > 0 && data[0].string_list_data) {
           return data;
         }
       }
-      // If data is an object, recursively search its values
       if (data && typeof data === "object" && !Array.isArray(data)) {
         for (const key of Object.keys(data)) {
           const result = findItemsArray(data[key]);
@@ -372,23 +170,26 @@
     }
 
     // ──────────────────────────────────────
-    // Extract usernames from href (resilient)
+    // Extract usernames + timestamps
     // ──────────────────────────────────────
-    function extractUsernames(items) {
+    function extractUsernamesWithData(items) {
       return items.flatMap((item) => {
         if (!item.string_list_data || !Array.isArray(item.string_list_data)) {
           return [];
         }
         return item.string_list_data.map((entry) => {
+          let username = entry.value || item.title;
           if (entry.href) {
             try {
               const url = new URL(entry.href);
               const pathParts = url.pathname.split("/").filter(Boolean);
-              return pathParts[pathParts.length - 1];
+              username = pathParts[pathParts.length - 1];
             } catch (_) { }
           }
-          // Fallback
-          return entry.value || item.title;
+          return {
+            username,
+            timestamp: entry.timestamp || null,
+          };
         });
       });
     }
@@ -412,23 +213,188 @@
       });
     }
 
-    // ──────────────────────────────────────
-    // Search / filter
-    // ──────────────────────────────────────
-    let allResults = [];
 
-    document.getElementById("searchBox").addEventListener("input", (e) => {
-      const query = e.target.value.toLowerCase();
-      renderResults(allResults.filter((u) => u.toLowerCase().includes(query)));
+
+    // ──────────────────────────────────────
+    // Format timestamp to date string
+    // ──────────────────────────────────────
+    function formatDate(ts) {
+      if (!ts) return null;
+      const d = new Date(ts * 1000);
+      return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    }
+
+    // ──────────────────────────────────────
+    // Instagram colors for fallback avatars
+    // ──────────────────────────────────────
+    const IG_GRADIENTS = [
+      "linear-gradient(135deg, #833ab4, #fd1d1d)",
+      "linear-gradient(135deg, #fd1d1d, #fcb045)",
+      "linear-gradient(135deg, #fcb045, #833ab4)",
+      "linear-gradient(135deg, #405de6, #833ab4)",
+      "linear-gradient(135deg, #e1306c, #fd1d1d)",
+      "linear-gradient(135deg, #833ab4, #c13584)",
+      "linear-gradient(135deg, #405de6, #5851db)",
+      "linear-gradient(135deg, #f77737, #fcb045)",
+    ];
+
+    function getGradient(username) {
+      let hash = 0;
+      for (let i = 0; i < username.length; i++) {
+        hash = username.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      return IG_GRADIENTS[Math.abs(hash) % IG_GRADIENTS.length];
+    }
+
+    // ──────────────────────────────────────
+    // Build a profile card HTML
+    // ──────────────────────────────────────
+    function createProfileCard(userEntry) {
+      const { username, timestamp } = userEntry;
+      const card = document.createElement("li");
+      card.className = "profile-card";
+
+      const initial = username.charAt(0).toUpperCase();
+      const gradient = getGradient(username);
+      const followDate = formatDate(timestamp);
+
+      card.innerHTML = `
+        <div class="card-top">
+          <div class="avatar-wrapper">
+            <div class="avatar-ring">
+              <div class="avatar" style="background:${gradient}">${initial}</div>
+            </div>
+          </div>
+          <div class="user-info">
+            <span class="username">@${username}</span>
+          </div>
+        </div>
+        ${followDate ? `<div class="follow-date">Following since <span>${followDate}</span></div>` : ""}
+        <a class="visit-btn" href="https://www.instagram.com/${username}" target="_blank" rel="noopener noreferrer">
+          View Profile <span class="arrow">→</span>
+        </a>
+      `;
+
+      return card;
+    }
+
+    // ──────────────────────────────────────
+    // Search / filter / sort state
+    // ──────────────────────────────────────
+    let allResults = []; // array of { username, timestamp }
+    let currentSort = "username-asc";
+
+    // ──────────────────────────────────────
+    // Dropdown toggle logic
+    // ──────────────────────────────────────
+    function setupDropdown(btnId, menuId, onSelect, labelId) {
+      const btn = document.getElementById(btnId);
+      const menu = document.getElementById(menuId);
+
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        // Close other dropdowns
+        document.querySelectorAll(".dropdown-menu.show").forEach((m) => {
+          if (m !== menu) {
+            m.classList.remove("show");
+            m.previousElementSibling?.classList.remove("open");
+          }
+        });
+        menu.classList.toggle("show");
+        btn.classList.toggle("open");
+      });
+
+      menu.querySelectorAll(".dropdown-item").forEach((item) => {
+        item.addEventListener("click", () => {
+          // Update selection UI
+          menu.querySelectorAll(".dropdown-item").forEach((i) => {
+            i.classList.remove("selected");
+            i.querySelector(".check").textContent = "";
+          });
+          item.classList.add("selected");
+          item.querySelector(".check").textContent = "✓";
+
+          // Update button label
+          const label = item.textContent.replace("✓", "").trim();
+          document.getElementById(labelId).textContent = label;
+          btn.classList.add("active");
+
+          // Close menu
+          menu.classList.remove("show");
+          btn.classList.remove("open");
+
+          // Trigger callback
+          onSelect(item.dataset.filter || item.dataset.sort);
+        });
+      });
+    }
+
+    // Close dropdowns when clicking outside
+    document.addEventListener("click", () => {
+      document.querySelectorAll(".dropdown-menu.show").forEach((m) => {
+        m.classList.remove("show");
+        m.previousElementSibling?.classList.remove("open");
+      });
     });
 
-    function renderResults(list) {
+    setupDropdown("sortBtn", "sortMenu", (value) => {
+      currentSort = value;
+      applyFilterSortSearch();
+    }, "sortLabel");
+
+    // ──────────────────────────────────────
+    // Sort logic
+    // ──────────────────────────────────────
+    function applySort(list) {
+      const sorted = [...list];
+      sorted.sort((a, b) => {
+        switch (currentSort) {
+          case "username-asc":
+            return a.username.localeCompare(b.username);
+          case "username-desc":
+            return b.username.localeCompare(a.username);
+          case "date-newest":
+            return (b.timestamp || 0) - (a.timestamp || 0);
+          case "date-oldest":
+            return (a.timestamp || 0) - (b.timestamp || 0);
+          default:
+            return 0;
+        }
+      });
+      return sorted;
+    }
+
+    // ──────────────────────────────────────
+    // Combined sort + search
+    // ──────────────────────────────────────
+    function applyFilterSortSearch() {
+      const query = document.getElementById("searchBox").value.toLowerCase();
+      let list = allResults;
+
+      // Search
+      if (query) {
+        list = list.filter((u) =>
+          u.username.toLowerCase().includes(query)
+        );
+      }
+
+      // Sort
+      list = applySort(list);
+
+      renderCards(list);
+    }
+
+    document.getElementById("searchBox").addEventListener("input", () => {
+      applyFilterSortSearch();
+    });
+
+    function renderCards(list) {
       const resultList = document.getElementById("resultList");
       const searchInfo = document.getElementById("searchInfo");
       resultList.innerHTML = "";
 
       if (list.length === 0) {
-        resultList.innerHTML = '<li>No matches found.</li>';
+        resultList.innerHTML = '<div class="no-results">No matches found.</div>';
         searchInfo.textContent = "";
         return;
       }
@@ -439,17 +405,13 @@
         searchInfo.textContent = "";
       }
 
-      list.forEach((username, index) => {
-        const listItem = document.createElement("li");
-        listItem.setAttribute("data-index", index + 1);
-        const link = document.createElement("a");
-        link.href = `https://www.instagram.com/${username}`;
-        link.target = "_blank";
-        link.textContent = `https://www.instagram.com/${username}`;
-        listItem.appendChild(link);
-        resultList.appendChild(listItem);
+      list.forEach((userEntry) => {
+        const card = createProfileCard(userEntry);
+        resultList.appendChild(card);
       });
     }
+
+
 
     // ──────────────────────────────────────
     // Compare logic
@@ -463,7 +425,6 @@
         return;
       }
 
-      // UI: hide previous results
       hideError();
       const btn = document.getElementById("compareBtn");
       const resultsDiv = document.getElementById("results");
@@ -476,7 +437,6 @@
           readFile(followingFile),
         ]);
 
-        // Auto-detect the items array in each file
         const followersItems = findItemsArray(followersData);
         if (!followersItems) {
           throw new Error(
@@ -491,33 +451,39 @@
           );
         }
 
-        const followers = new Set(extractUsernames(followersItems));
-        const following = extractUsernames(followingItems);
+        const followersSet = new Set(
+          extractUsernamesWithData(followersItems).map((e) => e.username)
+        );
+        const followingAll = extractUsernamesWithData(followingItems);
 
         // Find "following" who are not in "followers"
-        const notFollowers = following
-          .filter((username) => !followers.has(username))
-          .sort();
+        const notFollowers = followingAll
+          .filter((entry) => !followersSet.has(entry.username))
+          .sort((a, b) => a.username.localeCompare(b.username));
 
-        // Remove duplicates
-        allResults = [...new Set(notFollowers)];
+        // Deduplicate by username
+        const seen = new Set();
+        allResults = notFollowers.filter((entry) => {
+          if (seen.has(entry.username)) return false;
+          seen.add(entry.username);
+          return true;
+        });
 
         // Show results
         resultsDiv.style.display = "block";
 
-        // Count banner
         const countBanner = document.getElementById("countBanner");
         if (allResults.length === 0) {
           countBanner.textContent = '🎉 All "following" are also "followers"!';
-          countBanner.style.backgroundColor = "#00ab22";
+          countBanner.style.background = "linear-gradient(135deg, #059669, #10b981)";
         } else {
           countBanner.textContent = `${allResults.length} account${allResults.length === 1 ? "" : "s"} don't follow you back`;
-          countBanner.style.backgroundColor = "#0059e7";
+          countBanner.style.background = "linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)";
         }
 
-        // Clear search and render
         document.getElementById("searchBox").value = "";
-        renderResults(allResults);
+
+        renderCards(allResults);
       } catch (error) {
         showError(error.message || error);
       } finally {
@@ -526,18 +492,18 @@
     });
   </script>
 
-  <!-- Footer Section -->
+  <!-- Footer -->
   <div class="footer">
     <div>
-      <p style="padding-bottom: 5px; margin: 0%">
-        Made by <i style="color: yellow">Ekam</i>
+      <p style="margin: 0;">
+        Made by <span class="ig-handle">Ekam</span>
       </p>
-      ©
-      <script>document.write(new Date().getFullYear())</script>
+      © <span id="footerYear"></span>
+      <script>document.getElementById("footerYear").textContent = new Date().getFullYear();</script>
     </div>
     <div class="right">
       Follow
-      <a href="https://www.instagram.com/notsookayekam" target="_blank" style="color: yellow">@notsookayekam</a><br />
+      <a href="https://www.instagram.com/notsookayekam" target="_blank" class="ig-handle">@notsookayekam</a><br />
       <a href="https://github.com/Ekam-Bitt/following-not-followers" target="_blank">⭐️ this repo on Github</a>
     </div>
   </div>
