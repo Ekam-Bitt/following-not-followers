@@ -4,7 +4,7 @@ Find the Instagram accounts you follow that do not follow you back by comparing 
 
 Live site: [following-not-followers.vercel.app](https://following-not-followers.vercel.app/)
 
-<img width="2880" height="1460" alt="Following Not Followers screenshot" src="https://github.com/user-attachments/assets/2faadfc0-b1cd-4d06-bb7d-3c2af20c2cb0" />
+<img width="2880" alt="Following Not Followers screenshot" src="https://github.com/user-attachments/assets/9c81c2fd-b38c-4c8c-b57a-3b3f4cce4bbf" />
 
 ## Features
 
